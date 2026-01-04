@@ -5,7 +5,7 @@ const client = new Client({
 	intents: [GatewayIntentBits.Guilds]
 });
 
-// 使用斜線指令 (/timer [分鐘] [事項])
+// 使用斜線指令 (/timer)
 const commands = [
 	new SlashCommandBuilder()
 		.setName("timer")
@@ -51,18 +51,16 @@ client.on("interactionCreate", async interaction => {
 		const durationInMs = minutes * 60 * 1000;
 		const endTime = Date.now() + durationInMs;
 
-		// 轉換為 Unix Timestamp (秒)，這是 Discord 需要的格式
+		// 轉換為 Unix Timestamp (秒)，因 Discord 需要此格式
 		const endTimestamp = Math.floor(endTime / 1000);
 
-		// 使用 Discord 的相對時間語法 <t:時間戳:R> 顯示 "剩餘 xx 分鐘" 或 "剩餘 xx 秒"
+		// Discord 相對時間語法 <t:時間戳:R> 
 		await interaction.reply({
 			content: `⏳ **${title}** 開始倒數！\n將在 <t:${endTimestamp}:R> 結束`,
 		});
 
-		// 設定 JavaScript 的計時器，時間到後發送提醒
 		setTimeout(async () => {
 			try {
-				// 發送一個新的後續訊息提醒用戶，並提及該用戶
 				await interaction.followUp({
 					content: `🔔 <@${interaction.user.id}> 逼逼時間到！\n**${title}** 已經結束囉！`,
 				});
