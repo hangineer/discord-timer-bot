@@ -1,0 +1,12 @@
+services:
+  timer-bot:
+    build: .
+    container_name: discord-timer-bot
+    restart: always
+    env_file:
+      - .env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10mb"
+        max-file: "3"
