@@ -16,7 +16,7 @@ const commands = [
 				.setRequired(true))
 		.addStringOption(option =>
 			option.setName("title")
-				.setDescription("輕填寫倒數標題")
+				.setDescription("請填寫標題")
 				.setRequired(false))
 ]
 	.map(command => command.toJSON());
@@ -26,12 +26,12 @@ const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_TOKEN);
 
 (async () => {
 	try {
-		console.log("正在刷新指令...");
+		console.log("Loading...");
 		await rest.put(
 			Routes.applicationCommands(process.env.CLIENT_ID),
 			{ body: commands },
 		);
-		console.log("指令刷新成功");
+		console.log("Successful!");
 	} catch (error) {
 		console.error(error);
 	}
@@ -46,7 +46,7 @@ client.on("interactionCreate", async interaction => {
 
 	if (interaction.commandName === "timer") {
 		const minutes = interaction.options.getInteger("minutes");
-		const title = interaction.options.getString("title") || "計時結束";
+		const title = interaction.options.getString("title") || "你的計時器";
 
 		const durationInMs = minutes * 60 * 1000;
 		const endTime = Date.now() + durationInMs;
@@ -56,7 +56,7 @@ client.on("interactionCreate", async interaction => {
 
 		// Discord 相對時間語法 <t:時間戳:R> 
 		await interaction.reply({
-			content: `⏳ **${title}** 開始倒數！\n將在 <t:${endTimestamp}:R> 結束`,
+			content: `⏳ **${title}** 開始倒數！\n將在 <t:${endTimestamp}:t> 結束`,
 		});
 
 		setTimeout(async () => {
